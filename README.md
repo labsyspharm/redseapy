@@ -4,6 +4,17 @@
 
 Based on the original code found at https://github.com/nolanlab/REDSEA
 
+To take full advantage of the basic science and clinical potential of
+multiplexed imaging technologies, various challenges, such as cell segmentation
+and cellular feature extraction, must first be addressed. However, the
+uncertainty in cell boundaries and technical noise across protein markers
+in the image can cause inaccurate cell segmentation in dense tissue and create
+conditions in which signals from adjacent cells spatially “bleed” into each
+other. This leads to nonsensical cell states as determined by unsupervised
+clustering methods. Recent efforts have led to the development of a novel
+spatial cross-talk correction method called REinforcement Dynamic Spillover
+EliminAtion (REDSEA, PMID: 34295327).
+
 ## Installation
 
 ```
@@ -18,29 +29,30 @@ usage: redsea [-h] [--element-shape {star,square}]
               [--markers-of-interest [MARKERS_OF_INTEREST ...]]
               IMAGE SEGMENTATION_MASK MARKERS DESTINATION
 
-Correct cross-talk using the REDSEA method developed by Bai et.al.
+Correct cross-talk between neighboring cells in immuno-fluorescence images
+using the REDSEA method developed by Bai et.al.
 https://doi.org/10.3389/fimmu.2021.652631
 
 positional arguments:
   IMAGE                 Path to registered image in TIFF format
   SEGMENTATION_MASK     Path to segmentation mask image in TIFF format
-  MARKERS               Path to a csv file containing a single column
-                        with the marker names called 'marker_name'
+  MARKERS               Path to a csv file containing a single column with
+                        the marker names called 'marker_name'
   DESTINATION           Path to a new directory where uncorrected and
-                        corrected single cell quantifications will be
-                        saved
+                        corrected single cell quantifications will be saved
 
 optional arguments:
   -h, --help            show this help message and exit
   --element-shape {star,square}
                         Shape of the element to be used for cross-talk
-                        correction
+                        correction. See Fig S1C in the READSEA manuscript.
+                        The authors recommend the star shape.
   --element-size ELEMENT_SIZE
-                        Size of the element to be used for cross-talk
-                        correction
+                        Size in pixels of the element to be used for cross-
+                        talk correction. The REDSEA authors recommend 2
   --markers-of-interest [MARKERS_OF_INTEREST ...]
-                        Only correct cross-talk for the specified
-                        markers. Default: all markers
+                        Only correct cross-talk for the specified markers.
+                        Default: all markers
 ```
 
 ## Example

@@ -10,7 +10,8 @@ from . import redsea as redsea_mod
 
 def redsea():
     parser = argparse.ArgumentParser(
-        description="""Correct cross-talk using the REDSEA method
+        description="""Correct cross-talk between neighboring cells
+        in immuno-fluorescence images using the REDSEA method
         developed by Bai et.al.
 
         https://doi.org/10.3389/fimmu.2021.652631
@@ -36,13 +37,14 @@ def redsea():
         "--element-shape",
         choices=["star", "square"],
         default="star",
-        help="Shape of the element to be used for cross-talk correction",
+        help="Shape of the element to be used for cross-talk correction. See Fig S1C in the READSEA "
+        "manuscript. The authors recommend the star shape.",
     )
     parser.add_argument(
         "--element-size",
         type=int,
         default=2,
-        help="Size of the element to be used for cross-talk correction",
+        help="Size in pixels of the element to be used for cross-talk correction. The REDSEA authors recommend 2",
     )
     parser.add_argument(
         "--markers-of-interest",
