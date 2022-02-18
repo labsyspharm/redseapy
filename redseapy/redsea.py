@@ -192,6 +192,22 @@ def run_redsea(
 
     ###############
     cellBoundaryTotal = np.sum(cellPairMap, axis=0)  # count the boundary
+
+    # Cells without neighbors cause division by zero problems later one
+    # removing them for now
+    no_neighbor_cells = np.where(cellBoundaryTotal == 0)[0]
+    if len(no_neighbor_cells) > 0:
+        cellPairMap = np.delete(cellPairMap, no_neighbor_cells, axis=0)
+        cellPairMap = np.delete(cellPairMap, no_neighbor_cells, axis=1)
+        cellNum = cellNum - len(no_neighbor_cells)
+        labelNum = cellNum
+        cellBoundaryTotal = np.delete(cellBoundaryTotal, no_neighbor_cells, axis=0)
+        data = np.delete(data, no_neighbor_cells, axis=0)
+        dataScaleSize = np.delete(dataScaleSize, no_neighbor_cells, axis=0)
+        cellSizes = np.delete(cellSizes, no_neighbor_cells, axis=0)
+        centroid_xs = np.delete(np.array(centroid_xs), no_neighbor_cells, axis=0)
+        centroid_ys = np.delete(np.array(centroid_ys), no_neighbor_cells, axis=0)
+
     ############### this step might cause error in ark version, double check with YH
 
     # devide to get fraction
