@@ -2,8 +2,6 @@
 
 # Compensate cross-talk between neighboring cells
 
-Based on the original code found at https://github.com/nolanlab/REDSEA
-
 To take full advantage of the basic science and clinical potential of
 multiplexed imaging technologies, various challenges, such as cell segmentation
 and cellular feature extraction, must first be addressed. However, the
@@ -13,12 +11,21 @@ conditions in which signals from adjacent cells spatially “bleed” into each
 other. This leads to nonsensical cell states as determined by unsupervised
 clustering methods. Recent efforts have led to the development of a novel
 spatial cross-talk correction method called REinforcement Dynamic Spillover
-EliminAtion (REDSEA, PMID: 34295327).
+EliminAtion (REDSEA, [PMID: 34295327](https://pubmed.ncbi.nlm.nih.gov/34295327/)).
+
+Here, we present a command-line interface and a Docker container that allow REDSEA to be deployed in any execution environment.
+
+## References
+
+* When using the method, please cite [Bai, et. al](https://www.frontiersin.org/articles/10.3389/fimmu.2021.652631/full)
+* Original implementation: https://github.com/nolanlab/REDSEA
 
 ## Installation
 
+* When running as a container, please ensure that you have [Docker installed](https://docs.docker.com/get-docker/). Note that when using Docker Desktop on Mac OS X, you may need to increase the amount of RAM that Docker is allowed to use, [which is set to 2GB by default](https://docs.docker.com/desktop/mac/#resources).
+* When running in a local environment,
 ```
-pip install git+https://github.com/clemenshug/redseapy.git#egg=redseapy
+pip install git+https://github.com/labsyspharm/redseapy.git#egg=redseapy
 ```
 
 ## Usage
@@ -55,7 +62,7 @@ optional arguments:
                         Default: all markers
 ```
 
-## Example
+### Example
 
 Example data are available for [download at mcmicro.org](https://mcmicro.org/datasets.html).
 
@@ -65,3 +72,17 @@ redsea exemplar-001/registration/exemplar-001.ome.tif \
   exemplar-001/markers.csv \
   exemplar-001/corrected-quantification
 ```
+
+### Running as a Docker container
+
+From the directory that contains your data files (e.g., inside `exemplar-001`),
+```
+docker run -v "$PWD":/data --rm labsyspharm/redsea:0.1 redsea data/registration/exemplar-001.ome.tif \
+  data/segmentation/unmicst-exemplar-001/cellMask.tif \
+  data/markers.csv \
+  data/corrected-quantification
+```
+where
+* `-v "$PWD":/data` maps the current working directory (containing the data files) to be visible as `/data` inside the container
+* `--rm` cleans up the container after it's done executing
+* `0.1` specifies the container [version](https://github.com/labsyspharm/redseapy/releases) to execute.
