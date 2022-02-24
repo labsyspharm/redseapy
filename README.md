@@ -17,7 +17,7 @@ Here, we present a command-line interface and a Docker container that allow REDS
 
 ## References
 
-* When using the method, please cite [Bai, et. al](https://www.frontiersin.org/articles/10.3389/fimmu.2021.652631/full)
+* When using the method, please cite [Bai and Zhu, et. al](https://www.frontiersin.org/articles/10.3389/fimmu.2021.652631/full)
 * Original implementation: https://github.com/nolanlab/REDSEA
 
 ## Installation
