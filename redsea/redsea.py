@@ -66,16 +66,8 @@ def run_redsea(
         massDS = pd.read_csv(markers_csv, header=None)
         massDS.columns = ["marker_name"]
 
-    # remove the wavelenth
-    markers = []
-    for m in massDS.marker_name:
-        for s in ["_488", "_555", "_570", "_647", "_660"]:
-            m = m.replace(s, "")
-        markers.append(m)
-    massDS["marker_name"] = markers
-
     if markers_of_interest is None:
-        markers_of_interest = markers
+        markers_of_interest = massDS[["marker_name"]]
     normChannels = markers_of_interest
     #### should be inside the function
     normChannelsInds = ismember(normChannels, massDS["marker_name"])
@@ -98,10 +90,9 @@ def run_redsea(
     segMat = imread(seg_mask)
 
     # rename the labels as this is a subset from the full sample
-    lb = 0
-    for i in sorted(np.unique(segMat)):
-        segMat = np.where(segMat == i, lb, segMat)
-        lb += 1
+    original_cell_ids = np.unique(segMat)[1:]
+    for i, x in enumerate(original_cell_ids):
+        segMat[np.where(segMat == x)] = i + 1
 
     logging.info("Quantifying markers before correction")
     labelNum = np.max(segMat)
@@ -207,6 +198,7 @@ def run_redsea(
         cellSizes = np.delete(cellSizes, no_neighbor_cells, axis=0)
         centroid_xs = np.delete(np.array(centroid_xs), no_neighbor_cells, axis=0)
         centroid_ys = np.delete(np.array(centroid_ys), no_neighbor_cells, axis=0)
+        original_cell_ids = np.delete(original_cell_ids, no_neighbor_cells, axis=0)
 
     ############### this step might cause error in ark version, double check with YH
 
@@ -362,6 +354,7 @@ def run_redsea(
     ]:
         d["x_centroid"] = centroid_xs
         d["y_centroid"] = centroid_ys
+        d["original_cell_id"] = original_cell_ids
 
     output_dir = pathlib.Path(output_dir).resolve()
     logging.info(f"Writing output files to {output_dir}")
